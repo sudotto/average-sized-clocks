@@ -1,0 +1,43 @@
+html {
+	text-align: center;
+	background-image: url("img/clock4.gif");
+	color: #00ff00;
+}
+
+hr {
+	border: 2px solid red;
+}
+
+#main {
+	display: grid;
+	grid-template-columns: 60% 40%;
+	background-color: black;
+	padding: 20px;
+	margin: 200px;
+	margin-top: 0px;
+	outline: 5px dashed blue;
+	box-shadow: 30px 30px red;
+}
+
+.clock {
+	font-family: monospace;
+	background-color: lime;
+	color: red;
+	padding: 10px;
+	margin: 100px;
+	border-top: 10px solid white;
+	border-left: 10px solid white;
+	border-bottom: 10px solid green;
+	border-right: 10px solid green;
+}
+
+.tagline {
+	font-size: 100px;
+	color: red;
+	background-color: pink;
+	border-radius: 100%;
+	border-top: 10px solid white;
+	border-left: 10px solid white;
+	border-bottom: 10px solid black;
+	border-right: 10px solid black;
+}
