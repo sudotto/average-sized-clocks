@@ -19,6 +19,20 @@ hr {
 	box-shadow: 30px 30px red;
 }
 
+#clock_coin {
+	position: fixed;
+	background-color: lime;
+	border: 3px dotted brown;
+	color: blue;
+	top: 0px;
+	left: 0px;
+	font-size: 30px;
+}
+
+#clock_coin img {
+	max-width: 30px;
+}
+
 .clock {
 	font-family: monospace;
 	background-color: lime;

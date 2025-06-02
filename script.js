@@ -26,40 +26,170 @@ timezones = [
 	"WAT"   // UTC-1
 ];
 
-function update_clock(name){
-	const date = new Date();
-	const offset = date.getTimezoneOffset();
-	const clock = document.getElementById(name);
-	var time = "broken";
+var clock_coin = parseInt(localStorage.clock_coin);
+if(!clock_coin){
+	clock_coin = 0;
+}
 
-	if(name == "normal"){
-		time = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
-	} else if(name == "epoch"){
-		time = `${date.getTime()}`
-	} else if(name == "timezone"){
+const normal = {
+	name: "Clock",
+	img: "clock1",
+	element: document.getElementById("normal"),
+	price: 0,
+	unlocked: true,
+	render: function() {
+		if(!this.unlocked){
+			this.element.innerHTML = `<img class="gif" src="img/clock_lock.png"></img><h1>${this.name}</h1>Unlock for $${this.price}`;
+			return;
+		}
+		clock_coin++;
+		const date = new Date();
+		const offset = date.getTimezoneOffset();
+		var time = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+		this.element.innerHTML = `<img class="gif" src="img/${this.img}.gif"></img><h1>${this.name}</h1>${time}`;
+	}
+};
+
+const epoch = {
+	name: "Uncensored Clock",
+	img: "clock4",
+	element: document.getElementById("epoch"),
+	price: 100,
+	unlocked: localStorage.epoch_unlock,
+	buy: function() {
+		if(clock_coin >= this.price){
+			clock_coin -= this.price;
+			this.unlocked = true;
+			localStorage.epoch_unlock = true;
+			alert(`thank you for purchasing ${this.name} for $${this.price}`);
+			this.element.removeEventListener('click', function() {this.buy()}, false);
+		} else {
+			alert(`insufficient funds, cannot purchase ${this.name} for $${this.price}`);
+		}
+	},
+	render: function() {
+		if(!this.unlocked){
+			this.element.innerHTML = `<img class="gif" src="img/clock_lock.png"></img><h1>${this.name}</h1>Unlock for $${this.price}`;
+			return;
+		}
+		clock_coin++;
+		const date = new Date();
+		const offset = date.getTimezoneOffset();
+		var time = `${date.getTime()}`;
+		this.element.innerHTML = `<img class="gif" src="img/${this.img}.gif"></img><h1>${this.name}</h1>${time}`;
+	}
+};
+epoch.element.addEventListener('click', function() {epoch.buy()}, false);
+
+const timezone = {
+	name: "Always 8 Clock",
+	img: "clock2",
+	element: document.getElementById("timezone"),
+	price: 200,
+	unlocked: localStorage.timezone_unlock,
+	buy: function() {
+		if(clock_coin >= this.price){
+			clock_coin -= this.price;
+			this.unlocked = true;
+			localStorage.timezone_unlock = true;
+			alert(`thank you for purchasing ${this.name} for $${this.price}`);
+			this.element.removeEventListener('click', function() {this.buy()}, false);
+		} else {
+			alert(`insufficient funds, cannot purchase ${this.name} for $${this.price}`);
+		}
+	},
+	render: function() {
+		if(!this.unlocked){
+			this.element.innerHTML = `<img class="gif" src="img/clock_lock.png"></img><h1>${this.name}</h1>Unlock for $${this.price}`;
+			return;
+		}
+		clock_coin++;
+		const date = new Date();
+		const offset = date.getTimezoneOffset();
 		var index = (-offset / 60) - 1;
-		time = `8:${date.getMinutes()}:${date.getSeconds()} (${timezones.at(index + (8 - index))})`;
-	} else if(name == "special"){
-		time = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
-	} else if(name == "c(l)ock"){
+		var time = `${date.getMinutes()}:${date.getSeconds()} (${timezones.at(index + (8 - index))})`;
+		this.element.innerHTML = `<img class="gif" src="img/${this.img}.gif"></img><h1>${this.name}</h1>${time}`;
+	}
+};
+timezone.element.addEventListener('click', function() {timezone.buy()}, false);
+
+const special = {
+	name: "Special Clock",
+	img: "clock3",
+	element: document.getElementById("special"),
+	price: 400,
+	unlocked: localStorage.special_unlock,
+	buy: function() {
+		if(clock_coin >= this.price){
+			clock_coin -= this.price;
+			this.unlocked = true;
+			localStorage.special_unlock = true;
+			alert(`thank you for purchasing ${this.name} for $${this.price}`);
+			this.element.removeEventListener('click', function() {this.buy()}, false);
+		} else {
+			alert(`insufficient funds, cannot purchase ${this.name} for $${this.price}`);
+		}
+	},
+	render: function() {
+		if(!this.unlocked){
+			this.element.innerHTML = `<img class="gif" src="img/clock_lock.png"></img><h1>${this.name}</h1>Unlock for $${this.price}`;
+			return;
+		}
+		clock_coin++;
+		const date = new Date();
+		const offset = date.getTimezoneOffset();
+		var time = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+		this.element.innerHTML = `<img class="gif" src="img/${this.img}.gif"></img><h1>${this.name}</h1>${time}`;
+	}
+};
+special.element.addEventListener('click', function() {special.buy()}, false);
+
+const cock = {
+	name: "C(l)ock",
+	img: "clock4",
+	element: document.getElementById("c(l)ock"),
+	price: 800,
+	unlocked: localStorage.cock_unlock,
+	buy: function() {
+		if(clock_coin >= this.price){
+			clock_coin -= this.price;
+			this.unlocked = true;
+			localStorage.cock_unlock = true;
+			alert(`thank you for purchasing ${this.name} for $${this.price}`);
+			this.element.removeEventListener('click', function() {this.buy()}, false);
+		} else {
+			alert(`insufficient funds, cannot purchase ${this.name} for $${this.price}`);
+		}
+	},
+	render: function() {
+		if(!this.unlocked){
+			this.element.innerHTML = `<img class="gif" src="img/clock_lock.png"></img><h1>${this.name}</h1>Unlock for $${this.price}`;
+			return;
+		}
+		clock_coin++;
+		const date = new Date();
+		const offset = date.getTimezoneOffset();
 		var shaft = "";
 		for(let i = 0; i < date.getHours(); i++){
 			shaft += "=";
 		}
-		time = `<${shaft}3`;
+		var time = `<${shaft}3`;
+		this.element.innerHTML = `<img class="gif" src="img/${this.img}.gif"></img><h1>${this.name}</h1>${time}`;
 	}
-
-	if(clock){
-		clock.innerHTML = `${time}`;
-	}
-}
+};
+cock.element.addEventListener('click', function() {cock.buy()}, false);
 
 function update_all_clocks(){
-	update_clock("normal");
-	update_clock("epoch");
-	update_clock("timezone");
-	update_clock("special");
-	update_clock("c(l)ock");
+	const cc = document.getElementById("clock_coin");
+	localStorage.clock_coin = clock_coin;
+	if(cc){
+		cc.innerHTML = `<img src="img/cc.png"></img>Clock Coins: $${clock_coin}`;
+	}
+	normal.render();
+	epoch.render();
+	timezone.render();
+	special.render(); 
+	cock.render(); 
 }
 
 update_all_clocks();
