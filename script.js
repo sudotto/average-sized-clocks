@@ -31,6 +31,11 @@ if(!clock_coin){
 	clock_coin = 0;
 }
 
+var clock_gems = parseInt(localStorage.clock_gems);
+if(!clock_gems){
+	clock_gems = 0;
+}
+
 const normal = {
 	name: "Clock",
 	img: "clock1",
@@ -46,7 +51,7 @@ const normal = {
 		const date = new Date();
 		const offset = date.getTimezoneOffset();
 		var time = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
-		this.element.innerHTML = `<img class="gif" src="img/${this.img}.gif"></img><h1>${this.name}</h1>${time}`;
+		this.element.innerHTML = `<img class="gif" src="img/${this.img}.gif"></img><h1>${this.name}</h1><p>${time}</p>`;
 	}
 };
 
@@ -76,7 +81,7 @@ const epoch = {
 		const date = new Date();
 		const offset = date.getTimezoneOffset();
 		var time = `${date.getTime()}`;
-		this.element.innerHTML = `<img class="gif" src="img/${this.img}.gif"></img><h1>${this.name}</h1>${time}`;
+		this.element.innerHTML = `<img class="gif" src="img/${this.img}.gif"></img><h1>${this.name}</h1><p>${time}</p>`;
 	}
 };
 epoch.element.addEventListener('click', function() {epoch.buy()}, false);
@@ -108,7 +113,7 @@ const timezone = {
 		const offset = date.getTimezoneOffset();
 		var index = (-offset / 60) - 1;
 		var time = `${date.getMinutes()}:${date.getSeconds()} (${timezones.at(index + (8 - index))})`;
-		this.element.innerHTML = `<img class="gif" src="img/${this.img}.gif"></img><h1>${this.name}</h1>${time}`;
+		this.element.innerHTML = `<img class="gif" src="img/${this.img}.gif"></img><h1>${this.name}</h1><p>${time}</p>`;
 	}
 };
 timezone.element.addEventListener('click', function() {timezone.buy()}, false);
@@ -139,7 +144,7 @@ const special = {
 		const date = new Date();
 		const offset = date.getTimezoneOffset();
 		var time = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
-		this.element.innerHTML = `<img class="gif" src="img/${this.img}.gif"></img><h1>${this.name}</h1>${time}`;
+		this.element.innerHTML = `<img class="gif" src="img/${this.img}.gif"></img><h1>${this.name}</h1><p>${time}</p>`;
 	}
 };
 special.element.addEventListener('click', function() {special.buy()}, false);
@@ -174,7 +179,7 @@ const cock = {
 			shaft += "=";
 		}
 		var time = `<${shaft}3`;
-		this.element.innerHTML = `<img class="gif" src="img/${this.img}.gif"></img><h1>${this.name}</h1>${time}`;
+		this.element.innerHTML = `<img class="gif" src="img/${this.img}.gif"></img><h1>${this.name}</h1><p>${time}</p>`;
 	}
 };
 cock.element.addEventListener('click', function() {cock.buy()}, false);
@@ -183,13 +188,70 @@ function update_all_clocks(){
 	const cc = document.getElementById("clock_coin");
 	localStorage.clock_coin = clock_coin;
 	if(cc){
-		cc.innerHTML = `<img src="img/cc.png"></img>Clock Coins: $${clock_coin}`;
+		cc.innerHTML = `<div class="tooltip">get these by watching your clocks</div><img src="img/cc.png"></img>Clock Coins: $${clock_coin}`;
+	}
+	const cg = document.getElementById("clock_gems");
+	localStorage.clock_gems = clock_gems;
+	if(cg){
+		cg.innerHTML = `<div class="tooltip">buy em, or convert from coins</div><img src="img/cg.png"></img>Clock Gems: ${clock_gems}`;
 	}
 	normal.render();
 	epoch.render();
 	timezone.render();
 	special.render(); 
 	cock.render(); 
+}
+
+var buy_gems1 = document.getElementById("buy_gems1");
+if(buy_gems1){
+	buy_gems1.addEventListener('click', function() {
+		alert("you didn't really think i'd let you spend real money right?");
+	}, false);
+}
+
+var buy_gems5 = document.getElementById("buy_gems5");
+if(buy_gems1){
+	buy_gems5.addEventListener('click', function() {
+		alert("you didn't really think i'd let you spend real money right?");
+	}, false);
+}
+
+var buy_gems10 = document.getElementById("buy_gems10");
+if(buy_gems1){
+	buy_gems10.addEventListener('click', function() {
+		alert("you didn't really think i'd let you spend real money right?");
+	}, false);
+}
+
+var gem_input = document.getElementById("gem_input");
+var coin_input = document.getElementById("coin_input");
+if(gem_input && coin_input){
+	gem_input.addEventListener('change', function() {
+		if(gem_input.value > clock_gems){
+			gem_input.value = clock_gems;
+		}
+		coin_input.value = gem_input.value * 5;
+	}, false);
+	coin_input.addEventListener('change', function() {
+		if(coin_input.value > clock_coin){
+			console.log("more");
+			coin_input.value = clock_coin;
+		}
+		gem_input.value = coin_input.value / 5;
+	}, false);
+}
+
+var claim_gem = document.getElementById("claim_gem");
+var claim_coin = document.getElementById("claim_coin");
+if(claim_gem && claim_coin){
+	claim_gem.addEventListener('click', function() {
+		clock_gems += parseInt(gem_input.value);
+		clock_coin -= parseInt(coin_input.value);
+	}, false);
+	claim_coin.addEventListener('click', function() {
+		clock_coin += parseInt(coin_input.value);
+		clock_gems -= parseInt(gem_input.value);
+	}, false);
 }
 
 update_all_clocks();

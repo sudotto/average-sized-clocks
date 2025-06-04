@@ -19,30 +19,98 @@ hr {
 	box-shadow: 30px 30px red;
 }
 
-#clock_coin {
+#currencies {
 	position: fixed;
 	background-color: lime;
 	border: 3px dotted brown;
 	color: blue;
-	top: 0px;
-	left: 0px;
+	top: 10px;
+	left: 10px;
 	font-size: 30px;
 }
 
-#clock_coin img {
+#currencies img {
 	max-width: 30px;
 }
 
+.claim {
+	background-color: black;
+	color: white;
+	padding: 5px;
+	margin: 20px;
+	border-top: 10px solid white;
+	border-left: 10px solid white;
+	border-bottom: 10px solid gray;
+	border-right: 10px solid gray;
+}
+
 .clock {
-	font-family: monospace;
 	background-color: lime;
 	color: red;
 	padding: 10px;
-	margin: 100px;
+	margin: 10px;
 	border-top: 10px solid white;
 	border-left: 10px solid white;
 	border-bottom: 10px solid green;
 	border-right: 10px solid green;
+}
+
+.clock p {
+	font-family: monospace;
+	background-color: black;
+	color: green;
+	font-size: 20px;
+} 
+
+#buy_box {
+	display: grid;
+	grid-template-columns: auto auto auto;
+}
+
+#converter {
+	display: grid;
+	grid-template-columns: auto auto;
+}
+
+#gem_box {
+	background-color: magenta;
+	color: white;
+	padding: 10px;
+	margin: 10px;
+	border-top: 10px solid white;
+	border-left: 10px solid white;
+	border-bottom: 10px solid purple;
+	border-right: 10px solid purple;
+}
+
+#gem_box * {
+	margin: auto;
+}
+
+#coin_box {
+	background-color: yellow;
+	color: black;
+	padding: 10px;
+	margin: 10px;
+	border-top: 10px solid white;
+	border-left: 10px solid white;
+	border-bottom: 10px solid orange;
+	border-right: 10px solid orange;
+}
+
+#coin_box * {
+	margin: auto;
+}
+
+.buy {
+	background-color: magenta;
+	color: white;
+	padding: 10px;
+	margin: 10px;
+	border-top: 10px solid white;
+	border-left: 10px solid white;
+	border-bottom: 10px solid purple;
+	border-right: 10px solid purple;
 }
 
 .tagline {
@@ -54,4 +122,19 @@ hr {
 	border-left: 10px solid white;
 	border-bottom: 10px solid black;
 	border-right: 10px solid black;
+}
+
+.tooltip_haver .tooltip {
+	visibility: hidden;
+	background-color: white;
+	color: black;
+	position: absolute;
+	margin-left: 100%;
+	font-size: 20px;
+	border: 10px solid black;
+	z-index: 1;
+}
+
+.tooltip_haver:hover .tooltip {
+	visibility: visible;
 }
