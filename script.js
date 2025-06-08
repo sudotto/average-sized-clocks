@@ -1,3 +1,136 @@
+var nuked = localStorage.nuked;
+if(!nuked){
+	nuked = "f";
+}
+if(nuked == "t"){
+	const all_elems = document.body.getElementsByTagName('*');
+	for(let i = 0; i < all_elems.length; i++){
+		all_elems[i].style.filter = "grayscale(1) brightness(0.71)";
+		all_elems[i].style.transform = `rotate(${Math.floor(Math.random() * 360)}deg)`;
+	}
+}
+
+function big_boom(){
+	let darkness = 1;
+	let desat = 0;
+	let soot_interval = setInterval(() => {
+		darkness -= 0.01;
+		desat += 0.05;
+		const all_elems = document.body.getElementsByTagName('*');
+		for(let i = 0; i < all_elems.length; i++){
+			if(all_elems[i].className != "explosion"){
+				all_elems[i].style.filter = `grayscale(${desat}) brightness(${darkness})`;
+				all_elems[i].style.transform = `rotate(${Math.floor(Math.random() * 360)}deg)`;
+			}
+		}
+	}, 100);
+	let boom_interval = setInterval(spawn_explosion, 10);
+	setTimeout(() => {
+		clearInterval(boom_interval);
+	}, 3000);
+	setTimeout(() => {
+		clearInterval(soot_interval);
+	}, 3000);
+}
+
+
+function spawn_explosion() {
+	const img = document.createElement("img");
+	img.src = "img/boom.gif";
+	img.className = "explosion";
+	img.style.top = `${Math.floor(Math.random() * (document.documentElement.offsetHeight - 0 + 1)) + 0}px`;
+	img.style.left = `${Math.floor(Math.random() * (document.documentElement.offsetWidth - 0 + 1)) + 0}px`;
+	img.style.filter = ``;
+	img.width = `${Math.floor(Math.random() * 500)}`
+
+	document.body.appendChild(img);
+
+	requestAnimationFrame(() => {
+		img.style.opacity = 1;
+	});
+
+	setTimeout(() => {
+		img.style.opacity = 0;
+		setTimeout(() => img.remove(), 1000);
+	}, 2000 + Math.random() * 1000);
+}
+
+var clock_coin = parseInt(localStorage.clock_coin);
+if(!clock_coin){
+	clock_coin = 0;
+}
+
+var clock_gems = parseInt(localStorage.clock_gems);
+if(!clock_gems){
+	clock_gems = 0;
+}
+
+const ad_list = document.getElementsByClassName("ad");
+const ad_count = 7;
+var rand = Math.floor(Math.random() * (ad_count - 0 + 1)) + 0;
+for(let i = 0; i < ad_list.length; i++){
+	if(rand + i > ad_count){
+		rand = 0;
+	}
+	ad_list[i].src = `img/ad${rand + i}.png`;
+}
+
+var coin_mod = parseInt(localStorage.coin_mod);
+if(!coin_mod){
+	coin_mod = 1;
+}
+
+const x2_coin = {
+	element: document.getElementById("2x_coin"),
+	name: "2x Coin Multiplier",
+	price: 100 * coin_mod,
+	level: coin_mod,
+	buy: function() {
+		if(clock_gems >= this.price){
+			clock_gems -= this.price;
+			coin_mod *= 2;
+			this.price = 100 * coin_mod;
+			this.level = coin_mod;
+			localStorage.coin_mod = coin_mod;
+		} else {
+			alert(`insufficient funds, cannot purchase ${this.name} (x${coin_mod} Coins/sec) for ${this.price} Gems`);
+		}
+	},
+	render: function() {
+		if(coin_mod == 1){
+			this.element.innerHTML = `<h1>${this.name} (x${coin_mod} Coins/sec)</h1>Unlock for ${this.price} Gems`;
+		} else {
+			this.element.innerHTML = `<h1>${this.name} (x${coin_mod} Coins/sec)</h1>Upgrade for ${this.price} Gems`;
+		}
+	}
+};
+x2_coin.element.addEventListener('click', function() {x2_coin.buy()}, false);
+
+
+const nuke = {
+	element: document.getElementById("nuke_website"),
+	name: "Nuke Website",
+	price: 1000,
+	buy: function(){
+		if(nuked == "t"){
+			return;
+		}
+		if(clock_gems >= this.price){
+			clock_gems -= this.price;
+			alert("you are doing the world a favor");
+			nuked = "t";
+			localStorage.nuked = "t";
+			big_boom();
+		} else {
+			alert(`insufficient funds, cannot purchase ${this.name} for ${this.price} Gems`);
+		}
+	},
+	render: function() {
+		this.element.innerHTML = `<h1>${this.name}</h1>Nuke Website for ${this.price} Gems`;
+	}
+};
+nuke.element.addEventListener('click', function() {nuke.buy()}, false);
+
 timezones = [
 	"GMT",  // UTC±0
 	"CET",  // UTC+1
@@ -26,28 +159,19 @@ timezones = [
 	"WAT"   // UTC-1
 ];
 
-var clock_coin = parseInt(localStorage.clock_coin);
-if(!clock_coin){
-	clock_coin = 0;
-}
-
-var clock_gems = parseInt(localStorage.clock_gems);
-if(!clock_gems){
-	clock_gems = 0;
-}
-
 const normal = {
 	name: "Clock",
 	img: "clock1",
 	element: document.getElementById("normal"),
 	price: 0,
+	coin_product: 1,
 	unlocked: true,
 	render: function() {
 		if(!this.unlocked){
 			this.element.innerHTML = `<img class="gif" src="img/clock_lock.png"></img><h1>${this.name}</h1>Unlock for $${this.price}`;
 			return;
 		}
-		clock_coin++;
+		clock_coin += this.coin_product * coin_mod;
 		const date = new Date();
 		const offset = date.getTimezoneOffset();
 		var time = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
@@ -60,6 +184,7 @@ const epoch = {
 	img: "clock4",
 	element: document.getElementById("epoch"),
 	price: 100,
+	coin_product: 2,
 	unlocked: localStorage.epoch_unlock,
 	buy: function() {
 		if(clock_coin >= this.price){
@@ -77,7 +202,7 @@ const epoch = {
 			this.element.innerHTML = `<img class="gif" src="img/clock_lock.png"></img><h1>${this.name}</h1>Unlock for $${this.price}`;
 			return;
 		}
-		clock_coin++;
+		clock_coin += this.coin_product * coin_mod;
 		const date = new Date();
 		const offset = date.getTimezoneOffset();
 		var time = `${date.getTime()}`;
@@ -91,6 +216,7 @@ const timezone = {
 	img: "clock2",
 	element: document.getElementById("timezone"),
 	price: 200,
+	coin_product: 3,
 	unlocked: localStorage.timezone_unlock,
 	buy: function() {
 		if(clock_coin >= this.price){
@@ -108,7 +234,7 @@ const timezone = {
 			this.element.innerHTML = `<img class="gif" src="img/clock_lock.png"></img><h1>${this.name}</h1>Unlock for $${this.price}`;
 			return;
 		}
-		clock_coin++;
+		clock_coin += this.coin_product * coin_mod;
 		const date = new Date();
 		const offset = date.getTimezoneOffset();
 		var index = (-offset / 60) - 1;
@@ -123,6 +249,7 @@ const special = {
 	img: "clock3",
 	element: document.getElementById("special"),
 	price: 400,
+	coin_product: 4,
 	unlocked: localStorage.special_unlock,
 	buy: function() {
 		if(clock_coin >= this.price){
@@ -140,7 +267,7 @@ const special = {
 			this.element.innerHTML = `<img class="gif" src="img/clock_lock.png"></img><h1>${this.name}</h1>Unlock for $${this.price}`;
 			return;
 		}
-		clock_coin++;
+		clock_coin += this.coin_product * coin_mod;
 		const date = new Date();
 		const offset = date.getTimezoneOffset();
 		var time = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
@@ -154,6 +281,7 @@ const cock = {
 	img: "clock4",
 	element: document.getElementById("c(l)ock"),
 	price: 800,
+	coin_product: 5,
 	unlocked: localStorage.cock_unlock,
 	buy: function() {
 		if(clock_coin >= this.price){
@@ -171,7 +299,7 @@ const cock = {
 			this.element.innerHTML = `<img class="gif" src="img/clock_lock.png"></img><h1>${this.name}</h1>Unlock for $${this.price}`;
 			return;
 		}
-		clock_coin++;
+		clock_coin += this.coin_product * coin_mod;
 		const date = new Date();
 		const offset = date.getTimezoneOffset();
 		var shaft = "";
@@ -185,6 +313,9 @@ const cock = {
 cock.element.addEventListener('click', function() {cock.buy()}, false);
 
 function update_all_clocks(){
+	if(nuked == "t"){
+		return;
+	}
 	const cc = document.getElementById("clock_coin");
 	localStorage.clock_coin = clock_coin;
 	if(cc){
@@ -200,6 +331,9 @@ function update_all_clocks(){
 	timezone.render();
 	special.render(); 
 	cock.render(); 
+	
+	x2_coin.render();
+	nuke.render();
 }
 
 var buy_gems1 = document.getElementById("buy_gems1");
@@ -255,5 +389,7 @@ if(claim_gem && claim_coin){
 }
 
 update_all_clocks();
+
+//big_boom();
 
 setInterval(update_all_clocks, 1000);
