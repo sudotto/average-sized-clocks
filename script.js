@@ -4,38 +4,58 @@ if(!nuked){
 }
 if(nuked == "t"){
 	const all_elems = document.body.getElementsByTagName('*');
+	const bg = document.getElementById("bg");
+	bg.style.backgroundImage = 'url("img/warning.gif")';
 	for(let i = 0; i < all_elems.length; i++){
-		all_elems[i].style.filter = "grayscale(1) brightness(0.71)";
-		all_elems[i].style.transform = `rotate(${Math.floor(Math.random() * 360)}deg)`;
+		all_elems[i].style.filter = "grayscale(1) brightness(0.4)";
+		if(all_elems[i] != bg){
+			all_elems[i].style.transform = `rotate(${Math.floor(Math.random() * 90)}deg)`;
+		}
 	}
 }
 
 function big_boom(){
-	let darkness = 1;
+	let darkness = 10;
 	let desat = 0;
-	let soot_interval = setInterval(() => {
-		darkness -= 0.01;
-		desat += 0.05;
-		const all_elems = document.body.getElementsByTagName('*');
-		for(let i = 0; i < all_elems.length; i++){
-			if(all_elems[i].className != "explosion"){
-				all_elems[i].style.filter = `grayscale(${desat}) brightness(${darkness})`;
-				all_elems[i].style.transform = `rotate(${Math.floor(Math.random() * 360)}deg)`;
+	let intensity = 0;
+	const all_elems = document.body.getElementsByTagName('*');
+	const bg = document.getElementById("bg");
+	bg.style.backgroundImage = 'url("img/warning.gif")';
+	const alarm = new Audio('aud/alarm.mp3');
+	alarm.play();
+	setTimeout(() => {
+		alarm.pause();
+		const ringing = new Audio('aud/ringing.mp3');
+		ringing.play();
+
+		let soot_interval = setInterval(() => {
+			darkness -= 0.4;
+			desat += 0.05;
+			intensity += 1;
+			for(let i = 0; i < all_elems.length; i++){
+				if(all_elems[i].className != "explosion"){
+					all_elems[i].style.filter = `grayscale(${desat}) brightness(${darkness})`;
+					if(all_elems[i] != bg){
+						all_elems[i].style.transform = `rotate(${Math.floor(Math.random() * intensity)}deg)`;
+					}
+				}
 			}
-		}
-	}, 100);
-	let boom_interval = setInterval(spawn_explosion, 10);
-	setTimeout(() => {
-		clearInterval(boom_interval);
-	}, 3000);
-	setTimeout(() => {
-		clearInterval(soot_interval);
-	}, 3000);
+		}, 100);
+		setTimeout(() => {
+			clearInterval(soot_interval);
+		}, 3000);
+
+		let boom_interval = setInterval(spawn_explosion, 100);
+		setTimeout(() => {
+			clearInterval(boom_interval);
+		}, 3000);
+	}, 10000);
 }
 
 
 function spawn_explosion() {
 	const img = document.createElement("img");
+	const audio = new Audio('aud/boom.mp3');
 	img.src = "img/boom.gif";
 	img.className = "explosion";
 	img.style.top = `${Math.floor(Math.random() * (document.documentElement.offsetHeight - 0 + 1)) + 0}px`;
@@ -44,6 +64,7 @@ function spawn_explosion() {
 	img.width = `${Math.floor(Math.random() * 500)}`
 
 	document.body.appendChild(img);
+	audio.play();
 
 	requestAnimationFrame(() => {
 		img.style.opacity = 1;
@@ -379,12 +400,20 @@ var claim_gem = document.getElementById("claim_gem");
 var claim_coin = document.getElementById("claim_coin");
 if(claim_gem && claim_coin){
 	claim_gem.addEventListener('click', function() {
-		clock_gems += parseInt(gem_input.value);
-		clock_coin -= parseInt(coin_input.value);
+		if(gem_input.value > 0 && coin_input.value > 0){
+			clock_gems += parseInt(gem_input.value);
+			clock_coin -= parseInt(coin_input.value);
+		} else {
+			alert("nice try with the negative value");
+		}
 	}, false);
 	claim_coin.addEventListener('click', function() {
-		clock_coin += parseInt(coin_input.value);
-		clock_gems -= parseInt(gem_input.value);
+		if(gem_input.value > 0 && coin_input.value > 0){
+			clock_coin += parseInt(coin_input.value);
+			clock_gems -= parseInt(gem_input.value);
+		} else {
+			alert("nice try with the negative value");
+		}
 	}, false);
 }
 
